@@ -24,10 +24,9 @@ the starting point for your blog, too.
 
 == Dependencies
 
-  $ gem install sinatra
-  $ gem install jchris-couchrest
+  $ gem install rake thin sinatra uuid jchris-couchrest extlib hpricot builder --no-rdoc --no-ri
 
-Maruku and Syntax are vendored. For now, CouchRest needs the Gem installed to work. 
+Maruku and Syntax are vendored.
 
 == Setup
 
@@ -75,8 +74,15 @@ Other kinds of data can be imported easily, take a look at the rake task :import
 == Extras
 
 I've added a few more features which weren't in the original Scanty: 
-- the ATOM feed now creates a separate feed URL for each user. The last_access property is updated for each user, whenever the feed is accessed. this allows the number of readers to be tracked, and old users to be removed, providing better accuracy.
 - there is now a checkbox when creating or editing a post which determines whether the post will be published. you will only see the unpublished posts when signed in. this allows unfinished posts to be saved without worrying about copying and pasting, etc.
+
+== This fork
+
+I've removed
+- the ATOM feed now creates a separate feed URL for each user. The last_access property is updated for each user, whenever the feed is accessed. this allows the number of readers to be tracked, and old users to be removed, providing better accuracy.
+As I couldn't get it to work. I think the before create callback is broken in couchrest.
+
+Works with CouchDB 0.9.0a & couchrest 0.16
 
 == Customize
 
@@ -89,7 +95,7 @@ Written by Adam Wiggins
 
 Patches contributed by: Christopher Swenson
 Forked by: Joel Tulloch
-
+  
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
 http://github.com/adamwiggins/keen
@@ -98,3 +104,4 @@ http://adam.blog.heroku.com/
 
 http://blog.jtulloch.com
 
+http://nicholasorr.com

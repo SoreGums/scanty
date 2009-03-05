@@ -2,3 +2,4 @@
 tmp/*
 Capfile
 config/deploy.rb
+logs/ping_log.txt

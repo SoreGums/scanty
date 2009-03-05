@@ -5,10 +5,10 @@ require 'couchrest'
 require 'uuid'
 
 error do
-	e = request.env['sinatra.error']
-	puts e.to_s
-	puts e.backtrace.join("\n")
-	"Application error"
+  e = request.env['sinatra.error']
+  puts e.to_s
+  puts e.backtrace.join("\n")
+  "Application error"
 end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/lib')
@@ -17,17 +17,17 @@ require 'user'
 require 'blog_ping'
 
 helpers do
-	def admin?
-		request.cookies[Blog.admin_cookie_key] == Blog.admin_cookie_value
-	end
+  def admin?
+    request.cookies[Blog.admin_cookie_key] == Blog.admin_cookie_value
+  end
 
-	def auth
-		stop [ 401, 'Not authorized' ] unless admin?
-	end
-	
-	def parse_tags tags
-	  tags.split(" ")
-	end 
+  def auth
+    stop [ 401, 'Not authorized' ] unless admin?
+  end
+  
+  def parse_tags tags
+    tags.split(%r{,\s*})
+  end 
 end
 
 layout 'layout'
@@ -37,24 +37,23 @@ layout 'layout'
 get '/' do
   posts = []
   if admin?
-    posts = Post.by_created_at :count=>3
-    @readers = FeedUser.by_uid.size
+    posts = Post.by_created_at :limit=>3
   else
-    posts = Post.by_created_at_and_public :count=>3
+    posts = Post.by_created_at_and_public :limit=>3
   end
-	erb :index, :locals => { :posts => posts }, :layout => false
+  erb :index, :locals => { :posts => posts }, :layout => false
 end
 
 get '/past/:year/:month/:day/:slug/' do
-  post = Post.by_slug(:key=>params[:slug], :count=>1).first	
+  post = Post.by_slug(:key=>params[:slug], :limit=>1).first	
   auth if post.not_public
-	stop [ 404, "Page not found" ] unless post
-	@title = post.title
-	erb :post, :locals => { :post => post }
+  stop [ 404, "Page not found" ] unless post
+  @title = post.title
+  erb :post, :locals => { :post => post }
 end
 
 get '/past/:year/:month/:day/:slug' do
-	redirect "/past/#{params[:year]}/#{params[:month]}/#{params[:day]}/#{params[:slug]}/", 301
+  redirect "/past/#{params[:year]}/#{params[:month]}/#{params[:day]}/#{params[:slug]}/", 301
 end
 
 get '/past' do
@@ -63,8 +62,8 @@ get '/past' do
   else
     posts = Post.by_created_at_and_public
   end
-	@title = "Archive"
-	erb :archive, :locals => { :posts => posts }
+  @title = "Archive"
+  erb :archive, :locals => { :posts => posts }
 end
 
 get '/past/tags/:tag' do
@@ -75,23 +74,20 @@ get '/past/tags/:tag' do
   if admin?
     posts = Post.by_tags(:key=>tag).sort_by do |post|
       post.created_at
-	  end
+    end
   else
     posts = Post.by_tags_and_public(:key=>tag).sort_by do |post|
       post.created_at
-	  end
+    end
   end
-	@title = "Posts tagged #{tag}"
-	erb :tagged, :locals => { :posts => posts, :tag => tag }
+  @title = "Posts tagged #{tag}"
+  erb :tagged, :locals => { :posts => posts, :tag => tag }
 end
 
-get '/feed/:uid' do
-  user = FeedUser.by_uid(:key=>params[:uid], :count=>1).first
-  user.last_access = Time.now
-  user.save
-	@posts = Post.by_created_at_and_public :count=>10
-	content_type 'application/atom+xml', :charset => 'utf-8'
-	builder :feed
+get '/feed' do
+  @posts = Post.by_created_at_and_public :limit=>10
+  content_type 'application/atom+xml', :charset => 'utf-8'
+  builder :feed
 end
 
 get '/robots.txt' do
@@ -101,14 +97,8 @@ Disallow: /feed
 Disallow: /feed/'
 end
 
-get '/feed' do
-	user = FeedUser.new :last_access => Time.now
-  user.save
-  redirect '/feed/' + user.uid, 301
-end
-
 get '/rss' do
-	redirect '/feed', 301
+  redirect '/feed', 301
 end
 
 get '/in_the_wild' do
@@ -118,54 +108,54 @@ end
 ### Admin
 
 get '/auth' do
-	erb :auth
+  erb :auth
 end
 
 post '/auth' do
-	set_cookie(Blog.admin_cookie_key, Blog.admin_cookie_value) if params[:password] == Blog.admin_password
-	redirect '/'
+  set_cookie(Blog.admin_cookie_key, Blog.admin_cookie_value) if params[:password] == Blog.admin_password
+  redirect '/'
 end
 
 get '/posts/new' do
-	auth
-	erb :edit, :locals => { :post => Post.new, :url => '/posts' }
+  auth
+  erb :edit, :locals => { :post => Post.new, :url => '/posts' }
 end
 
 post '/posts' do
-	auth
-	post = Post.new :title => params[:title], :tags => parse_tags(params[:tags]), :body => params[:body], :slug => Post.make_slug(params[:title])
-	if params[:publish].nil?
-  	post.not_public = true
-	else
-	  post.not_public = false
-	end
-	post.save
-	redirect post.url
+  auth
+  post = Post.new :title => params[:title], :tags => parse_tags(params[:tags]), :body => params[:body], :slug => Post.make_slug(params[:title])
+  if params[:publish].nil?
+    post.not_public = true
+  else
+    post.not_public = false
+  end
+  post.save
+  redirect post.url
 end
 
 get '/past/:year/:month/:day/:slug/edit' do
-	auth
-	post = Post.by_slug(:key=>params[:slug], :count=>1).first
-	stop [ 404, "Page not found" ] unless post
-	erb :edit, :locals => { :post => post, :url => post.url }
+  auth
+  post = Post.by_slug(:key=>params[:slug], :limit=>1).first
+  stop [ 404, "Page not found" ] unless post
+  erb :edit, :locals => { :post => post, :url => post.url }
 end
 
 post '/past/:year/:month/:day/:slug/' do
-	auth
-  post = Post.by_slug(:key=>params[:slug], :count=>1).first
-	stop [ 404, "Page not found" ] unless post
-	post.title = params[:title]
-	post.tags = parse_tags(params[:tags])
-	post.body = params[:body]
+  auth
+  post = Post.by_slug(:key=>params[:slug], :limit=>1).first
+  stop [ 404, "Page not found" ] unless post
+  post.title = params[:title]
+  post.tags = parse_tags(params[:tags])
+  post.body = params[:body]
   if params[:publish].nil?
-  	post.not_public = true
-	else
-	  post.not_public = false
+    post.not_public = true
+  else
+    post.not_public = false
     Thread.new {
       Pingr.new(File.dirname(__FILE__) + "/config/" + Blog.ping_services).execute
     }
-	end
-	redirect post.url if post.save
+  end
+  redirect post.url if post.save
 end
 
 get '/about' do
