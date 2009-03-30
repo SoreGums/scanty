@@ -41,7 +41,7 @@ something other than the default.
 
 Then run the server:
 
-  $ ruby main.rb
+  $ bin/thin start -p 4567 -R config/rackup-dev.ru
 
 And visit: http://localhost:4567/
 
@@ -62,6 +62,9 @@ for installation instructions, find your platform on the following page: http://
 
 for more information on CouchDB, check out the rest of the wiki at http://wiki.apache.org/couchdb/ or the homepage
 at http://incubator.apache.org/couchdb/
+
+Gentoo has CouchDB 0.8.1 in portage now. However this scanty won't work with 0.8.1 so you need to install edge.
+A guide is available at http://nicholasorr.com/blog/how-to/install-couchdb-on-gentoo/
 
 == Comments
 
