@@ -1,4 +1,8 @@
-require 'rubygems'
+# To Run
+#   $ bin/thin start -R config/rackup-dev.ru
+#     - OR -
+#   $ bin/thin start -R config/rackup.ru
+
 require 'sinatra'
 require 'config/app_config.rb'
 require 'couchrest'

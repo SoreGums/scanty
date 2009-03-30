@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + '/../vendor/maruku/maruku'
-
-$LOAD_PATH.unshift File.dirname(__FILE__) + '/../vendor/syntax'
+require 'maruku'
 require 'syntax/convertors/html'
 
 class Post < CouchRest::ExtendedDocument

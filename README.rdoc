@@ -24,9 +24,13 @@ the starting point for your blog, too.
 
 == Dependencies
 
-  $ gem install rake thin sinatra uuid jchris-couchrest extlib hpricot builder --no-rdoc --no-ri
+I like bundled gems, so this scanty includes the merb bundler.
+Not sure if bin/thor will work for you so you may need to install the 
+thor gem manually then use plain thor instead of bin/thor.
 
-Maruku and Syntax are vendored.
+  $ gem source -a http://gems.github.com
+  $ bin/thor merb:gem:redeploy
+
 
 == Setup
 
@@ -82,7 +86,7 @@ I've removed
 - the ATOM feed now creates a separate feed URL for each user. The last_access property is updated for each user, whenever the feed is accessed. this allows the number of readers to be tracked, and old users to be removed, providing better accuracy.
 As I couldn't get it to work. I think the before create callback is broken in couchrest.
 
-Works with CouchDB 0.9.0a & couchrest 0.16
+Works with CouchDB 0.9.0a (r759914) & couchrest 0.22
 
 == Customize
 
@@ -94,7 +98,7 @@ edit the CSS or the code as you see fit.
 Written by Adam Wiggins
 
 Patches contributed by: Christopher Swenson
-Forked by: Joel Tulloch
+Forked by: Nicholas Orr
   
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 

@@ -3,3 +3,10 @@ tmp/*
 Capfile
 config/deploy.rb
 logs/ping_log.txt
+.DS_Store
+*~
+.#*
+gems/gems/*
+gems/specifications/*
+!gems/gems/thor*
+!gems/specifications/thor*

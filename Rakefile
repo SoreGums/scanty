@@ -2,7 +2,7 @@ ports = [4567,4568]
 desc "Start the app server"
 task :start => :stop do
 	puts "Starting the blog"
-	system "thin -s 2 -C config/config.yml -R config/rackup.ru start"
+	system "bin/thin -s 2 -C config/config.yml -R config/rackup.ru start"
 end
 
 # code lifted from rush
