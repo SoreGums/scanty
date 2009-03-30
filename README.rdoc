@@ -60,11 +60,11 @@ automatically.
 
 for installation instructions, find your platform on the following page: http://wiki.apache.org/couchdb/Installation
 
-for more information on CouchDB, check out the rest of the wiki at http://wiki.apache.org/couchdb/ or the homepage
-at http://incubator.apache.org/couchdb/
+for more information on CouchDB, check out the rest of the wiki at http://wiki.apache.org/couchdb or the homepage
+at http://incubator.apache.org/couchdb
 
 Gentoo has CouchDB 0.8.1 in portage now. However this scanty won't work with 0.8.1 so you need to install edge.
-A guide is available at http://nicholasorr.com/blog/how-to/install-couchdb-on-gentoo/
+A guide is available at http://nicholasorr.com/blog/how-to/install-couchdb-on-gentoo
 
 == Comments
 
