@@ -1,15 +1,14 @@
-= Scanty, a really small blog, now on the couch
+= Scanty, a really small blog, now on the CouchDB
 
 == Overview
 
 Scanty is blogging software.  It was created by Adam Wiggins for his blog:
 http://adam.blog.heroku.com
 
-The main thing that has been changed with this version is the data-access. Rather than his default of
-Sequel, and a SQLite database, I have used CouchRest for accessing a CouchDB database.
-
 It is not a blogging engine, but it's small and easy to modify, so it could be
 the starting point for your blog, too.
+
+This Branch is using the Makura CouchDB Ruby wrapper
 
 == Features
 
@@ -83,13 +82,13 @@ Other kinds of data can be imported easily, take a look at the rake task :import
 I've added a few more features which weren't in the original Scanty: 
 - there is now a checkbox when creating or editing a post which determines whether the post will be published. you will only see the unpublished posts when signed in. this allows unfinished posts to be saved without worrying about copying and pasting, etc.
 
-== This fork
+== This fork / Branch
 
 I've removed
 - the ATOM feed now creates a separate feed URL for each user. The last_access property is updated for each user, whenever the feed is accessed. this allows the number of readers to be tracked, and old users to be removed, providing better accuracy.
 As I couldn't get it to work. I think the before create callback is broken in couchrest.
 
-Works with CouchDB 0.9.0 & couchrest 0.23
+Works with CouchDB 0.9.0 & Makura 2009.03.28
 
 == Customize
 

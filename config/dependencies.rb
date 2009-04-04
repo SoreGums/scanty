@@ -7,4 +7,4 @@ dependency "uuid", "2.0.1"
 dependency "hpricot", "0.7"
 dependency "builder", "2.1.2"
 # gem source -a http://gems.github.com
-dependency "jchris-couchrest", "0.23"
+dependency "manveru-makura", "2009.03.28"
