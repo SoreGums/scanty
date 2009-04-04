@@ -1,61 +1,16 @@
 require 'maruku'
 require 'syntax/convertors/html'
 
-class Post < CouchRest::ExtendedDocument
-  use_database CouchRest.database!((Blog.url_base_database || '') + Blog.database_name)
+class Post
+  include Makura::Model
 
-  property :title
-  property :body
-  property :slug
-  property :tags, :default => []
-  property :not_public
-    
-  view_by :created_at, :descending=>true
-  view_by :slug
-  view_by :not_public
-  view_by :created_at_and_public, :descending=>true,
-    :map =>
-      "function(doc) {
-        if(doc['couchrest-type'] == 'Post' && !doc['not_public']) {
-          emit(doc['created_at'],1);
-        }
-      }",
-    :reduce => 
-      "function(keys, values, rereduce) {
-        return sum(values);
-      }"
-
-  view_by :tags,
-    :map => 
-      "function(doc) {
-        if (doc['couchrest-type'] == 'Post' && doc['tags']) {
-          doc['tags'].forEach(function(tag){
-            emit(tag, 1);
-          });
-        }
-      }",
-    :reduce => 
-      "function(keys, values, rereduce) {
-        return sum(values);
-    }" 
+  properties :title, :body, :slug, :tags, :not_public
   
-  view_by :tags_and_public,
-    :map => 
-      "function(doc) {
-        if (doc['couchrest-type'] == 'Post' && doc['tags'] && !doc['not_public']) {
-          doc['tags'].forEach(function(tag){
-            emit(tag, 1);
-          });
-        }
-      }",
-    :reduce => 
-      "function(keys, values, rereduce) {
-        return sum(values);
-    }"
+  layout :tags, :reduce => 'sum_values'
+  layout :tags_and_public, :reduce => 'sum_values'
+  layout :created_at_and_public, :reduce => 'sum_values'
   
-  timestamps!
-  
-  couchrest_type = 'Post'  
+  save # submit design docs to CouchDB
   
   def created_at
     unless self['created_at'].nil?

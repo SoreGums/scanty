@@ -5,7 +5,7 @@
 
 require 'sinatra'
 require 'config/app_config.rb'
-require 'couchrest'
+require 'makura'
 require 'uuid'
 
 error do
