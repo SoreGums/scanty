@@ -6,7 +6,6 @@ logs/ping_log.txt
 .DS_Store
 *~
 .#*
-gems/gems/*
-gems/specifications/*
-!gems/gems/thor*
-!gems/specifications/thor*
+bin/*
+gems/*
+!gems/cache

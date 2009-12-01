@@ -3,10 +3,19 @@
 #     - OR -
 #   $ bin/thin start -R config/rackup.ru
 
-require 'sinatra'
-require 'config/app_config.rb'
+require 'json'
+require 'ostruct'
 require 'couchrest'
 require 'uuid'
+
+class Scanty < Sinatra::Base
+  set :app_file, __FILE__
+  set :static, true
+  set :public, Proc.new { File.join(root, 'public') }
+  set :env, ENV['RACK_ENV']
+  set :run, false
+
+require 'config/app_config.rb'
 
 error do
   e = request.env['sinatra.error']
@@ -116,7 +125,7 @@ get '/auth' do
 end
 
 post '/auth' do
-  set_cookie(Blog.admin_cookie_key, Blog.admin_cookie_value) if params[:password] == Blog.admin_password
+  response.set_cookie(Blog.admin_cookie_key, Blog.admin_cookie_value) if params[:password] == Blog.admin_password
   redirect '/'
 end
 
@@ -164,4 +173,6 @@ end
 
 get '/about' do
   erb :about  
+end
+
 end
